@@ -1,10 +1,14 @@
 {
   "name": "questionnaire-model",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Questionnaire Model",
   "main": "./dist/main.js",
+  "types": "./dist/main.d.ts",
   "author": "chardon55",
   "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
   "devDependencies": {
     "typescript": "^4.4.2"
   },
