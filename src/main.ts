@@ -10,6 +10,7 @@ export class GenericQuestion {
     protected answer: string
     protected inputAnswer: string
     protected tag: string
+    protected imageUrls: string[]
 
     private onUpdateInputAnswer: IUpdateListener<string> = null
 
@@ -47,6 +48,14 @@ export class GenericQuestion {
 
     public set OnUpdateInputAnswer(listener: IUpdateListener<string>) {
         this.OnUpdateInputAnswer = listener
+    }
+
+    public get ImageUrls() {
+        return this.imageUrls
+    }
+
+    public set ImageUrls(value) {
+        this.imageUrls = value
     }
 
     public clearInputAnswerListener() {
