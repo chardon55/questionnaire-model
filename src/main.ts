@@ -4,7 +4,8 @@ export enum QuestionType {
     GENERIC, CHOICE, MULTI_CHOICE, FILL, TRUE_FALSE, OTHER,
 }
 
-export class GenericQuestion {
+export abstract class GenericQuestion {
+    protected id: string
     protected type: QuestionType = QuestionType.GENERIC
     protected title: string
     protected answer: string
@@ -13,6 +14,14 @@ export class GenericQuestion {
     protected imageUrls: string[]
 
     private onUpdateInputAnswer: IUpdateListener<string> = null
+
+    public get Id() {
+        return this.id
+    }
+
+    public set Id(value) {
+        this.id = value
+    }
 
     public get Title() {
         return this.title
@@ -42,9 +51,7 @@ export class GenericQuestion {
         return this.onUpdateInputAnswer
     }
 
-    public get IsCorrect(): boolean {
-        return this.inputAnswer == this.Answer
-    }
+    public abstract TestCorrect(): boolean
 
     public set OnUpdateInputAnswer(listener: IUpdateListener<string>) {
         this.OnUpdateInputAnswer = listener
@@ -139,6 +146,16 @@ export class MultipleChoiceQuestion extends GenericQuestion {
         }
     }
 
+    public TestCorrect(): boolean {
+        for (let item of this.inputChoiceIndices) {
+            if (!(item in this.correctChoiceIndices)) {
+                return false
+            }
+        }
+
+        return true
+    }
+
     public constructor(title: string, choices: string[], correctChoiceIndices: number[], tag: string = null) {
         super(title, "", tag)
         this.choices = choices
@@ -182,6 +199,10 @@ export class SingleChoiceQuestion extends MultipleChoiceQuestion {
 }
 
 export class FillQuestion extends GenericQuestion {
+    public TestCorrect(): boolean {
+        return this.inputAnswer.trim() == this.answer.trim()
+    }
+
     public constructor(title: string, answer: string, tag: string = null) {
         super(title, answer, tag)
 
@@ -190,6 +211,10 @@ export class FillQuestion extends GenericQuestion {
 }
 
 export class TrueFalseQuestion extends SingleChoiceQuestion {
+    public TestCorrect(): boolean {
+        return this.InputOption === this.CorrectOption
+    }
+
     public get InputOption() {
         return !!this.InputChoiceIndex
     }
