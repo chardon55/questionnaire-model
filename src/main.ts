@@ -5,19 +5,25 @@ export function convertToQuestion(obj: any): GenericQuestion {
 
     switch (obj.type) {
         case 1:
+            instance = new SingleChoiceQuestion(obj?.title, obj?.choices, obj?.correctChoiceIndices[0], obj?.tag)
+            instance.InputChoiceIndices = obj?.inputChoiceIndices ?? []
+            break
         case 2:
-        case 4:
-            instance = new SingleChoiceQuestion(obj.title, obj.choices, obj.correctChoiceIndices[0], obj.tag)
-            instance.InputChoiceIndices = obj.inputChoiceIndices
+            instance = new MultipleChoiceQuestion(obj?.title, obj?.choices, obj?.correctChoiceIndices, obj?.tag)
+            instance.InputChoiceIndices = obj?.inputChoiceIndices ?? []
+            break
+        case 3:
+            instance = new TrueFalseQuestion(obj?.title, obj?.choices[0], obj?.choices[1], !!obj?.correctChoiceIndices[0], obj?.tag)
+            instance.InputOption = !!obj?.inputChoiceIndices[0]
             break
         default:
-            instance = new FillQuestion(obj.title, obj.answer, obj.tag)
+            instance = new FillQuestion(obj?.title, obj?.answer, obj?.tag)
             break
     }
 
-    instance.Id = obj.id
-    instance.inputAnswer = obj.inputAnswer
-    instance.ImageUrls = obj.imageUrls
+    instance.Id = obj?.id
+    instance.InputAnswer = obj?.inputAnswer
+    instance.ImageUrls = obj?.imageUrls
 
     return instance
 }
