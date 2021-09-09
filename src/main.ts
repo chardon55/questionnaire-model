@@ -169,6 +169,10 @@ export class MultipleChoiceQuestion extends GenericQuestion {
     }
 
     public TestCorrect(): boolean {
+        if (this.inputChoiceIndices.length !== this.correctChoiceIndices.length) {
+            return false
+        }
+
         for (let item of this.inputChoiceIndices) {
             if (!(item in this.correctChoiceIndices)) {
                 return false
