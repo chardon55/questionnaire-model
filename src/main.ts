@@ -220,7 +220,7 @@ export class SingleChoiceQuestion extends MultipleChoiceQuestion {
     }
 
     public set InputAnswer(value: string) {
-        super.InputAnswer = value[0]
+        super.InputAnswer = value ? value[0] : null
     }
 
     public constructor(title: string, choices: string[], correctChoiceIndex: number, tag: string = null) {
