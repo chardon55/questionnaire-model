@@ -1,5 +1,27 @@
 import IUpdateListener from "./update-listener"
 
+export function convertToQuestion(obj: any): GenericQuestion {
+    let instance
+
+    switch (obj.type) {
+        case 1:
+        case 2:
+        case 4:
+            instance = new SingleChoiceQuestion(obj.title, obj.choices, obj.correctChoiceIndices[0], obj.tag)
+            instance.InputChoiceIndices = obj.inputChoiceIndices
+            break
+        default:
+            instance = new FillQuestion(obj.title, obj.answer, obj.tag)
+            break
+    }
+
+    instance.Id = obj.id
+    instance.inputAnswer = obj.inputAnswer
+    instance.ImageUrls = obj.imageUrls
+
+    return instance
+}
+
 export enum QuestionType {
     GENERIC, CHOICE, MULTI_CHOICE, FILL, TRUE_FALSE, OTHER,
 }
