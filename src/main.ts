@@ -18,11 +18,11 @@ export function convertToQuestion(obj: any): GenericQuestion {
             break
         default:
             instance = new FillQuestion(obj?.title, obj?.answer, obj?.tag)
+            instance.InputAnswer = obj?.inputAnswer
             break
     }
 
     instance.Id = obj?.id
-    instance.InputAnswer = obj?.inputAnswer
     instance.ImageUrls = obj?.imageUrls
 
     return instance
