@@ -13,7 +13,7 @@ export function convertToQuestion(obj: any): GenericQuestion {
             instance.InputChoiceIndices = obj?.inputChoiceIndices ?? []
             break
         case 4:
-            let indices = obj?.CorrectChoiceIndices ?? [null]
+            let indices = obj?.correctChoiceIndices ?? [null]
             if (indices.length === 0) {
                 indices = [null]
             }
