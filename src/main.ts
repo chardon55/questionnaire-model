@@ -13,11 +13,16 @@ export function convertToQuestion(obj: any): GenericQuestion {
             instance.InputChoiceIndices = obj?.inputChoiceIndices ?? []
             break
         case 3:
-            const value = obj?.correctChoiceIndices[0] === true ? true : obj?.correctChoiceIndices[0] === false ? false : null
+            let indices = obj?.CorrectChoiceIndices ?? [null]
+            if (indices.length === 0) {
+                indices = [null]
+            }
+
+            const value = indices[0] === true ? true : indices[0] === false ? false : null
             const list = obj?.choices ?? ["", ""]
 
             instance = new TrueFalseQuestion(obj?.title, list[1], list[0], value, obj?.tag)
-            instance.InputOption = !!obj?.inputChoiceIndices[0]
+            instance.InputOption = indices[0]
             break
         default:
             instance = new FillQuestion(obj?.title, obj?.answer, obj?.tag)
@@ -131,7 +136,7 @@ export abstract class GenericQuestion {
 export class MultipleChoiceQuestion extends GenericQuestion {
     protected choices: string[]
     protected correctChoiceIndices: number[]
-    protected inputChoiceIndices: number[]
+    protected inputChoiceIndices: number[] = []
 
     public get Choices() {
         return this.choices
@@ -200,12 +205,23 @@ export class MultipleChoiceQuestion extends GenericQuestion {
         return true
     }
 
+    public MatchedCount(): number {
+        let matched = 0
+        for (let item of this.inputChoiceIndices) {
+            if (this.correctChoiceIndices.indexOf(item) > -1) {
+                matched++
+            }
+        }
+
+        return matched
+    }
+
     public constructor(title: string, choices: string[], correctChoiceIndices: number[], tag: string = null) {
         super(title, "", tag)
         this.choices = choices
         this.correctChoiceIndices = correctChoiceIndices
 
-        this.type = QuestionType.MULTI_CHOICE
+        this.type = correctChoiceIndices.length > 1 ? QuestionType.MULTI_CHOICE : QuestionType.CHOICE
     }
 }
 
@@ -268,7 +284,7 @@ export class TrueFalseQuestion extends SingleChoiceQuestion {
     }
 
     public get InputOption() {
-        return this.InputChoiceIndex === 1 ? true : this.InputChoiceIndex === 0 ? false : null
+        return this.InputChoiceIndex === 1 ? true : this.InputChoiceIndex === 0 ? false : this.InputChoiceIndex === null ? null : undefined
     }
 
     public set InputOption(value: boolean) {
@@ -276,14 +292,22 @@ export class TrueFalseQuestion extends SingleChoiceQuestion {
     }
 
     public get CorrectOption() {
-        return this.CorrectChoiceIndex === 1 ? true : this.CorrectChoiceIndex === 0 ? false : null
+        return this.CorrectChoiceIndex === 1 ? true : this.CorrectChoiceIndex === 0 ? false : this.CorrectChoiceIndex
     }
 
-    public constructor(title: string, trueTitle: string = "", falseTitle: string = "", correctOption: boolean = true, tag: string = null) {
+    public get TrueTitle() {
+        return this.choices[1]
+    }
+
+    public get FalseTitle() {
+        return this.choices[0]
+    }
+
+    public constructor(title: string, trueTitle: string = "", falseTitle: string = "", correctOption: boolean = undefined, tag: string = null) {
         super(title, [
             falseTitle,
             trueTitle,
-        ], correctOption ? 1 : 0, tag)
+        ], correctOption === true ? 1 : correctOption === false ? 0 : correctOption, tag)
 
         this.type = QuestionType.TRUE_FALSE
     }
