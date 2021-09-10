@@ -12,7 +12,7 @@ export function convertToQuestion(obj: any): GenericQuestion {
             instance = new MultipleChoiceQuestion(obj?.title, obj?.choices, obj?.correctChoiceIndices, obj?.tag)
             instance.InputChoiceIndices = obj?.inputChoiceIndices ?? []
             break
-        case 3:
+        case 4:
             let indices = obj?.CorrectChoiceIndices ?? [null]
             if (indices.length === 0) {
                 indices = [null]
