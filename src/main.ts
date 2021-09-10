@@ -18,7 +18,7 @@ export function convertToQuestion(obj: any): GenericQuestion {
                 indices = [null]
             }
 
-            const value = indices[0] === true ? true : indices[0] === false ? false : null
+            const value = indices[0] === 1 ? true : indices[0] === 0 ? false : null
             const list = obj?.choices ?? ["", ""]
 
             instance = new TrueFalseQuestion(obj?.title, list[1], list[0], value, obj?.tag)
