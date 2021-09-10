@@ -13,7 +13,9 @@ export function convertToQuestion(obj: any): GenericQuestion {
             instance.InputChoiceIndices = obj?.inputChoiceIndices ?? []
             break
         case 3:
-            instance = new TrueFalseQuestion(obj?.title, obj?.choices[0], obj?.choices[1], !!obj?.correctChoiceIndices[0], obj?.tag)
+            let list = obj?.choices ?? ["", ""]
+
+            instance = new TrueFalseQuestion(obj?.title, list[1], list[0], obj?.correctChoiceIndices[0], obj?.tag)
             instance.InputOption = !!obj?.inputChoiceIndices[0]
             break
         default:
@@ -40,6 +42,7 @@ export abstract class GenericQuestion {
     protected inputAnswer: string
     protected tag: string
     protected imageUrls: string[]
+    protected score: number
 
     private onUpdateInputAnswer: IUpdateListener<string> = null
 
@@ -91,6 +94,14 @@ export abstract class GenericQuestion {
 
     public set ImageUrls(value) {
         this.imageUrls = value
+    }
+
+    public get Score() {
+        return this.score
+    }
+
+    public set Score(value) {
+        this.score = value
     }
 
     public clearInputAnswerListener() {
@@ -180,7 +191,7 @@ export class MultipleChoiceQuestion extends GenericQuestion {
         }
 
         for (let item of this.inputChoiceIndices) {
-            if (!(item in this.correctChoiceIndices)) {
+            if (this.correctChoiceIndices.indexOf(item) === -1) {
                 return false
             }
         }
@@ -259,7 +270,7 @@ export class TrueFalseQuestion extends SingleChoiceQuestion {
         return !!this.CorrectChoiceIndex
     }
 
-    public constructor(title: string, trueTitle: string, falseTitle: string, correctOption: boolean, tag: string = null) {
+    public constructor(title: string, trueTitle: string = "", falseTitle: string = "", correctOption: boolean = true, tag: string = null) {
         super(title, [
             falseTitle,
             trueTitle,
