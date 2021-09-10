@@ -32,6 +32,7 @@ export function convertToQuestion(obj: any): GenericQuestion {
 
     instance.Id = obj?.id
     instance.ImageUrls = obj?.imageUrls
+    instance.Score = obj?.score
 
     return instance
 }
