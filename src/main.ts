@@ -13,9 +13,10 @@ export function convertToQuestion(obj: any): GenericQuestion {
             instance.InputChoiceIndices = obj?.inputChoiceIndices ?? []
             break
         case 3:
-            let list = obj?.choices ?? ["", ""]
+            const value = obj?.correctChoiceIndices[0] === true ? true : obj?.correctChoiceIndices[0] === false ? false : null
+            const list = obj?.choices ?? ["", ""]
 
-            instance = new TrueFalseQuestion(obj?.title, list[1], list[0], obj?.correctChoiceIndices[0], obj?.tag)
+            instance = new TrueFalseQuestion(obj?.title, list[1], list[0], value, obj?.tag)
             instance.InputOption = !!obj?.inputChoiceIndices[0]
             break
         default:
@@ -211,6 +212,10 @@ export class MultipleChoiceQuestion extends GenericQuestion {
 export class SingleChoiceQuestion extends MultipleChoiceQuestion {
 
     public get InputChoiceIndex(): number {
+        if (!this.InputChoiceIndices || this.InputChoiceIndices.length === 0) {
+            return null
+        }
+
         return this.inputChoiceIndices[0]
     }
 
@@ -219,6 +224,10 @@ export class SingleChoiceQuestion extends MultipleChoiceQuestion {
     }
 
     public get CorrectChoiceIndex(): number {
+        if (!this.CorrectChoiceIndices || this.CorrectChoiceIndices.length === 0) {
+            return null
+        }
+
         return this.CorrectChoiceIndices[0]
     }
 
@@ -243,7 +252,7 @@ export class SingleChoiceQuestion extends MultipleChoiceQuestion {
 
 export class FillQuestion extends GenericQuestion {
     public TestCorrect(): boolean {
-        return this.inputAnswer.trim() == this.answer.trim()
+        return this.inputAnswer?.trim() == this.answer?.trim()
     }
 
     public constructor(title: string, answer: string, tag: string = null) {
@@ -259,7 +268,7 @@ export class TrueFalseQuestion extends SingleChoiceQuestion {
     }
 
     public get InputOption() {
-        return !!this.InputChoiceIndex
+        return this.InputChoiceIndex === 1 ? true : this.InputChoiceIndex === 0 ? false : null
     }
 
     public set InputOption(value: boolean) {
@@ -267,7 +276,7 @@ export class TrueFalseQuestion extends SingleChoiceQuestion {
     }
 
     public get CorrectOption() {
-        return !!this.CorrectChoiceIndex
+        return this.CorrectChoiceIndex === 1 ? true : this.CorrectChoiceIndex === 0 ? false : null
     }
 
     public constructor(title: string, trueTitle: string = "", falseTitle: string = "", correctOption: boolean = true, tag: string = null) {
