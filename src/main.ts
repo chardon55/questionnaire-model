@@ -22,7 +22,7 @@ export function convertToQuestion(obj: any): GenericQuestion {
             const list = obj?.choices ?? ["", ""]
 
             instance = new TrueFalseQuestion(obj?.title, list[1], list[0], value, obj?.tag)
-            instance.InputOption = indices[0]
+            instance.InputOption = obj?.inputChoiceIndices[0]
             break
         default:
             instance = new FillQuestion(obj?.title, obj?.answer, obj?.tag)
@@ -222,7 +222,7 @@ export class MultipleChoiceQuestion extends GenericQuestion {
         this.choices = choices
         this.correctChoiceIndices = correctChoiceIndices
 
-        this.type = correctChoiceIndices.length > 1 ? QuestionType.MULTI_CHOICE : QuestionType.CHOICE
+        this.type = QuestionType.MULTI_CHOICE
     }
 }
 
