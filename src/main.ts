@@ -22,7 +22,7 @@ export function convertToQuestion(obj: any): GenericQuestion {
             const list = obj?.choices ?? ["", ""]
 
             instance = new TrueFalseQuestion(obj?.title, list[1], list[0], value, obj?.tag)
-            instance.InputOption = obj?.inputChoiceIndices[0]
+            instance.InputOption = !obj?.inputChoiceIndices ? null : obj.inputChoiceIndices[0] === 1 ? true : obj.inputChoiceIndices[0] === 0 ? false : null
             break
         default:
             instance = new FillQuestion(obj?.title, obj?.answer, obj?.tag)
