@@ -270,6 +270,14 @@ describe('Model test', function () {
                     assert.strictEqual(answer[i], wrong1WithDifferentLength[i])
                 }
             })
+
+            it("Render sequence", function () {
+                const seq = obj.RenderSequence
+
+                for (let i in choices) {
+                    assert.strictEqual(seq[i], parseInt(i))
+                }
+            })
         })
 
         describe("Real MC", function () {

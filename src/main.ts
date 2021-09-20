@@ -139,6 +139,20 @@ export class MultipleChoiceQuestion extends GenericQuestion {
     protected correctChoiceIndices: number[]
     protected inputChoiceIndices: number[] = []
 
+    protected renderSequence: number[] = []
+
+    public get RenderSequence() {
+        return this.renderSequence
+    }
+
+    public set RenderSequence(value) {
+        this.renderSequence = value
+    }
+
+    public randomizeRenderSequence() {
+        this.renderSequence = this.renderSequence.sort(() => 0.5 - Math.random())
+    }
+
     public get Choices() {
         return this.choices
     }
@@ -221,6 +235,7 @@ export class MultipleChoiceQuestion extends GenericQuestion {
         super(title, "", tag)
         this.choices = choices
         this.correctChoiceIndices = correctChoiceIndices
+        this.renderSequence = this.choices.map((_, index) => index)
 
         this.type = QuestionType.MULTI_CHOICE
     }
@@ -289,7 +304,7 @@ export class TrueFalseQuestion extends SingleChoiceQuestion {
     }
 
     public set InputOption(value: boolean) {
-        this.InputChoiceIndex = value ? 1 : 0
+        this.InputChoiceIndex = value === true ? 1 : value === false ? 0 : value
     }
 
     public get CorrectOption() {
