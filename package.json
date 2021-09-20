@@ -23,7 +23,7 @@
     "build": "yarn clean && tsc",
     "clean": "node ./clean.js",
     "start": "yarn build && node .",
-    "publish": "yarn build",
+    "prepublish": "yarn build",
     "test": "yarn build && mocha --timeout 500000"
   },
   "files": [
