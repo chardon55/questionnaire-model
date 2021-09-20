@@ -34,7 +34,7 @@ export function convertToQuestion(obj: any): GenericQuestion {
     instance.ImageUrls = obj?.imageUrls
     instance.Score = obj?.score
 
-    if (obj?.renderSequence) {
+    if (obj?.renderSequence && instance instanceof MultipleChoiceQuestion) {
         instance.RenderSequence = obj.renderSequence
     }
 
